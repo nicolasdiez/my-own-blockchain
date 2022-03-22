@@ -1,3 +1,6 @@
+# Author: nicolas.diez.risueno@gmail.com
+# Project: My Own Blockchain
+
 from flask import Flask, render_template
 from time import time
 
