@@ -1,22 +1,33 @@
 # Author: nicolas.diez.risueno@gmail.com
 # Project: My Own Blockchain
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, request, jsonify, render_template
 import Crypto
 import Crypto.Random
 from Crypto.PublicKey import RSA
 import binascii
+from collections import OrderedDict
 
 
 class Transaction:
 
-    def __init__(self, sender_address, sender_private_key, recipient_address, value):
+    # constructor
+    def __init__(self, sender_public_key, sender_private_key, recipient_public_key, amount):
 
         # attributes
-        self.sender_address = sender_address
+        self.sender_public_key = sender_public_key
         self.sender_private_key = sender_private_key
-        self.recipient_address = recipient_address
-        self.value = value
+        self.recipient_public_key = recipient_public_key
+        self.amount = amount
+
+    # methods
+    def to_dictionary(self):
+            return OrderedDict({
+                'sender_public_key': self.sender_public_key,
+                'sender_private_key': self.sender_private_key,
+                'recipient_public_key': self.recipient_public_key,
+                'amount': self.amount,
+            })
 
 
 # Create web server
@@ -65,7 +76,18 @@ def new_wallet():
 # 5th endpoint -> generate transaction
 @app.route('/generate/transaction', methods=['POST'])
 def generate_transaction():
-    return 'Done!!'
+    # 'request' module imported from flask package
+    sender_public_key = request.form['sender_public_key']
+    sender_private_key = request.form['sender_private_key']
+    recipient_public_key = request.form['recipient_public_key']
+    amount = request.form['amount']
+
+    transaction = Transaction(sender_public_key, sender_private_key, recipient_public_key, amount)
+
+    response = {'transaction': transaction.to_dictionary(),
+                'signature': 'blah'}
+
+    return jsonify(response), 200
 
 
 # run the Flask web server
