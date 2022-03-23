@@ -7,6 +7,8 @@ import Crypto.Random
 from Crypto.PublicKey import RSA
 import binascii
 from collections import OrderedDict
+from Crypto.Signature import PKCS1_v1_5  # Crypto package, Signature class
+from Crypto.Hash import SHA
 
 
 class Transaction:
@@ -22,12 +24,25 @@ class Transaction:
 
     # methods
     def to_dictionary(self):
-            return OrderedDict({
-                'sender_public_key': self.sender_public_key,
-                'sender_private_key': self.sender_private_key,
-                'recipient_public_key': self.recipient_public_key,
-                'amount': self.amount,
-            })
+        # OrderedDict used to convert to dictionary
+        return OrderedDict({
+            'sender_public_key': self.sender_public_key,
+            'sender_private_key': self.sender_private_key,
+            'recipient_public_key': self.recipient_public_key,
+            'amount': self.amount,
+        })
+
+    def sign_transaction(self):
+        # sender_private_key is used to sign the transaction
+        # we have to undo what we did when generating the private_key in the method new_wallet() -> RSA and Hex
+        private_key = RSA.importKey(binascii.unhexlify(self.sender_private_key))
+        # we create the signer object from the private_key, with this signer we will sign
+        signer = PKCS1_v1_5.new(private_key)
+        # hash of the transaction
+        hash = SHA.new(str(self.to_dictionary()).encode('utf8'))
+        # now we have to sign the hash with the signer object, and we obtain the signature itself
+        signature = binascii.hexlify(signer.sign(hash)).decode('ascii')
+        return signature
 
 
 # Create web server
@@ -85,7 +100,7 @@ def generate_transaction():
     transaction = Transaction(sender_public_key, sender_private_key, recipient_public_key, amount)
 
     response = {'transaction': transaction.to_dictionary(),
-                'signature': 'blah'}
+                'signature': transaction.sign_transaction()}
 
     return jsonify(response), 200
 
