@@ -2,17 +2,25 @@
 
 Summary:
 - This project is a miniaturized blockchain model created by Nicolas Díez
-- The architecture consist of 3 nodes + 2 clients (Alice & Bob)
+- The architecture consist of 3 Nodes + 2 Clients (Alice & Bob)
 
 Considerations:
 - Using the public key of the sender/recipient as their crypto wallet address
 
 -------------
 
-# How to run the Node web servers
+# How to run the web server Nodes
+
+-
+-
+-
 
 -------------
 
-# How to run the User web servers
+# How to run the web server Clients
+
+-
+-
+-
 
 -------------
