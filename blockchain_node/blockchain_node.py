@@ -1,12 +1,16 @@
 # Author: nicolas.diez.risueno@gmail.com
 # Project: My Own Blockchain
 
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, request, jsonify, render_template
 from time import time
 from flask_cors import CORS
 from collections import OrderedDict
+import binascii
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA256
 
-
+MINING_SENDER = "The Blockchain"
 
 class Blockchain:
 
@@ -42,35 +46,47 @@ class Blockchain:
         self.transactions = []
         self.chain.append(block)
 
+    def verify_transaction_signature(self, sender_public_key, signature, transaction):
+        public_key = RSA.importKey(binascii.unhexlify(sender_public_key))
+        verifier = PKCS1_v1_5.new(public_key)
+        h = SHA256.new(str(transaction).encode('utf8'))
+        # return TRUE if the 'h' (hash) corresponds to the 'signature'
+        try:
+            verifier.verify(h, binascii.unhexlify(signature))
+            return True
+        except ValueError:
+            return False
+
     def submit_transaction(self, sender_public_key, recipient_public_key, signature, amount):
-        # TODO: reward the miner
-        # TODO: validate the signature is correct
 
         transaction = OrderedDict({
             'sender_public_key': sender_public_key,
             'recipient_public_key': recipient_public_key,
-            'signature': signature,
             'amount': amount
         })
 
-        signature_verification = True
-        if signature_verification:
+        # Reward the miner for mining the block (transaction comes from the BC, not from a wallet)
+        if sender_public_key == MINING_SENDER:
             self.transactions.append(transaction)
             return len(self.chain) + 1
         else:
-            return False
-        return 3
-
+            # transaction from wallet to another wallet
+            signature_verification = self.verify_transaction_signature(sender_public_key, signature, transaction)
+            if signature_verification:
+                self.transactions.append(transaction)
+                return len(self.chain) + 1
+            else:
+                return False
+            return 3
 
 
 # instantiate the Blockchain
 blockchain = Blockchain()
 
 # Create Flask web server
-# instantiate the Node
+# instantiate the Node web server
 app = Flask(__name__)
 CORS(app)   # to overcome CORS blocking requests by Chrome
-
 
 
 # 1st endpoint
@@ -79,12 +95,15 @@ def index():
     return render_template('./index.html')
 
 
-# 2nd endpoint
+# 2nd endpoint -> Create a new transaction (add a transaction to the next Block in the blockchain)
 @app.route('/transactions/new', methods=['POST'])
 def new_transaction():
     values = request.form
 
-    # TODO:  check the required fields
+    # check if there is any empty or missing value in the input
+    required = ['confirmation_sender_public_key', 'confirmation_recipient_public_key', 'transaction_signature', 'confirmation_amount']
+    if not all (k in values for k in required):
+        return 'Missing values', 400
 
     # transaction_results will contain the number of the next Block that will contain the Transaction itself
     transaction_results = blockchain.submit_transaction(values['confirmation_sender_public_key'],

@@ -8,14 +8,13 @@ from Crypto.PublicKey import RSA
 import binascii
 from collections import OrderedDict
 from Crypto.Signature import PKCS1_v1_5  # Crypto package, Signature class
-from Crypto.Hash import SHA
+from Crypto.Hash import SHA256
 
 
 class Transaction:
 
     # constructor
     def __init__(self, sender_public_key, sender_private_key, recipient_public_key, amount):
-
         # attributes
         self.sender_public_key = sender_public_key
         self.sender_private_key = sender_private_key
@@ -27,7 +26,6 @@ class Transaction:
         # OrderedDict used to convert to dictionary
         return OrderedDict({
             'sender_public_key': self.sender_public_key,
-            'sender_private_key': self.sender_private_key,
             'recipient_public_key': self.recipient_public_key,
             'amount': self.amount,
         })
@@ -39,14 +37,14 @@ class Transaction:
         # we create the signer object from the private_key, with this signer we will sign
         signer = PKCS1_v1_5.new(private_key)
         # hash of the transaction
-        hash = SHA.new(str(self.to_dictionary()).encode('utf8'))
+        h = SHA256.new(str(self.to_dictionary()).encode('utf8'))
         # now we have to sign the hash with the signer object, and we obtain the signature itself
-        signature = binascii.hexlify(signer.sign(hash)).decode('ascii')
+        signature = binascii.hexlify(signer.sign(h)).decode('ascii')
         return signature
 
 
 # Create web server
-# instantiate the Node
+# instantiate the Client web server
 app = Flask(__name__)
 
 
@@ -68,7 +66,7 @@ def view_transactions():
     return render_template('./view_transactions.html')
 
 
-# 4th endpoint -> create wallet
+# 4th endpoint -> create wallet (generate public and private keys)
 @app.route('/wallet/new')
 def new_wallet():
     # using lib PyCryptoDome for encryption ($ pip install pycryptodome)
@@ -88,10 +86,11 @@ def new_wallet():
     return jsonify(response), 200
 
 
-# 5th endpoint -> generate transaction
+# 5th endpoint -> generate transaction (send coins from sender wallet to recipient wallet)
 @app.route('/generate/transaction', methods=['POST'])
 def generate_transaction():
     # 'request' module imported from flask package
+    # collect all the 4 input fields received from the ajax call in the frontend
     sender_public_key = request.form['sender_public_key']
     sender_private_key = request.form['sender_private_key']
     recipient_public_key = request.form['recipient_public_key']

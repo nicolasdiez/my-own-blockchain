@@ -54,6 +54,7 @@
     </div>
 
 
+    <!-- Transaction details form -->
     <div class="container alert alert-secondary">
         <form id="transaction_form">
             <div class="row">
@@ -102,7 +103,7 @@
 
 
 
-    <!-- Transaction details confirmation modal window -->
+    <!-- Transaction details Confirmation modal window -->
     <div class="modal modal-alert fade" id="basic_modal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
       <div class="modal-dialog">
 
@@ -186,7 +187,7 @@
           </div>
 
           <div class="modal-footer">
-            <button type="button" id="button_confirm_transaction" class="btn btn-success" data-dismiss="modal">OK</button>
+            <button type="button" id="confirm_transaction" class="btn btn-success" data-dismiss="modal">OK</button>
           </div>
 
         </div>
@@ -212,6 +213,7 @@
                     url: "/generate/transaction",
                     type: "POST",
                     dataType: 'json',
+                    header: {'Access-Control-Allow-Origin': '*'},
                     data: $('#transaction_form').serialize(),
                     success: function(response) {
                         console.log(response);
