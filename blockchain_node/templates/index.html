@@ -1,1 +1,110 @@
-<p2>It works!</p2>
+<!-- Author: nicolas.diez.risueno@gmail.com -->
+<!-- Project: My Own Blockchain -->
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blockchain Node</title>
+
+    <link rel="stylesheet" href="/static/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/vendor/DataTables/css/datatables.min.css">
+    <!--  <link rel="stylesheet" href="/static/vendor/font-awesome/font-awesome.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/custom.css">
+
+</head>
+
+<body>
+
+    <!-- Navigation bar of the top of the page -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a href="#" class="navbar-brand">Blockchain Node</a>
+
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a href="/" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/make/transaction" class="nav-link">Configure Nodes</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Transactions to be Mined and refresh button -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="card-body">
+                    <h4 class="card-title">Transactions to be added to the next block</h4>
+                    <button type="submit" id="refresh_transactions" class="btn btn-primary">
+                        <i class="fa fa-refresh"></i>  <!-- icon refresh from font-awesome -->
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table for un-mined transactions and Mine button -->
+    <div class="container">
+        <table id="unmined_transactions_table" class="table table-bordered" cellpadding="0" width="100%">
+
+        </table>
+
+        <div class="col-lg-12 text-center">
+            <input type="button" id="mine_button" class="btn btn-primary btn-lg" value="Mine">
+        </div>
+    </div>
+
+
+
+    <!-- Transactions on the Blockchain -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="card-body">
+                    <h4 class="card-title">Transactions on the Blockchain</h4>
+                    <button type="submit" id="refresh_blockchain" class="btn btn-primary">
+                        <i class="fa fa-refresh"></i>  <!-- icon refresh from font-awesome -->
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <table id="transactions_table" class="table table-bordered" cellpadding="0" width="100%">
+
+        </table>
+    </div>
+
+
+
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="static/vendor/DataTables/js/datatables.min.js"></script>
+    <script src="static/vendor/DataTables/js/ellipsis.js"></script>
+
+    <!-- this JS code will be executed after the page is loaded completely -->
+    <!-- function executed when user clicks "Generate Wallet" button -->
+    <!-- if more than 1 input in the html file, the input would need an identifier id= -->
+    <script>
+        $(function() {
+            
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,5 +1,9 @@
 # Author: nicolas.diez.risueno@gmail.com
 # Project: My Own Blockchain
+# File description:
+# Each Node in the blockchain will have a set of transactions sent by the users (Alice or Bob).
+# The Node holds several transactions sent by different users, when the Node success in mining the block, then
+# the block is added to the blockchain
 
 from flask import Flask, request, jsonify, render_template
 from time import time
