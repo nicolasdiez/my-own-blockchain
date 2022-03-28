@@ -125,6 +125,14 @@ def new_transaction():
     return jsonify(response), 201   # returning 201 signaling that we are creating a new resource
 
 
+# 3rd endpoint -> Get the transactions in the Node
+@app.route('/transactions/get', methods=['GET'])
+def get_transactions():
+    transactions = blockchain.transactions
+    response = {'transactions': transactions}
+    return jsonify(response), 200
+
+
 # run the Flask web server
 if __name__ == '__main__':
     from argparse import ArgumentParser
