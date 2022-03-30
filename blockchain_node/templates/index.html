@@ -61,6 +61,7 @@
 
         </table>
 
+        <!-- Mine button -->
         <div class="col-lg-12 text-center">
             <input type="button" id="mine_button" class="btn btn-primary btn-lg" value="Mine">
         </div>
@@ -140,6 +141,22 @@
                     console.log(error);
                 }
             });
+
+            $('#mine_button').click(function(){
+                $.ajax({
+                    url: '/mine',
+                    type: 'GET',
+                    success: function(response) {
+                        window.location.reload();
+                    },
+                    error: function(error){
+                        console.log(error);
+                    }
+
+                });
+
+            });
+
         });
 
     </script>

@@ -1,9 +1,9 @@
 # Author: nicolas.diez.risueno@gmail.com
 # Project: My Own Blockchain
 # File description:
-# Each Node in the blockchain will have a set of transactions sent by the users (Alice or Bob).
-# The Node holds several transactions sent by different users, when the Node success in mining the block, then
-# the block is added to the blockchain
+# Each Node in the blockchain will have a set of transactions sent by the users/clients (Alice or Bob).
+# The Node holds several transactions sent by different users.
+# When the Node success in mining the block, then the block is added to the blockchain.
 
 from flask import Flask, request, jsonify, render_template
 from time import time
@@ -13,8 +13,12 @@ import binascii
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
+from uuid import uuid4
 
+# this is the sender_public_key when the sender is the blockchain itself, for miner rewarding
 MINING_SENDER = "The Blockchain"
+# reward for the miner node  is 1 coin
+MINING_REWARD = 1
 
 class Blockchain:
 
@@ -24,6 +28,7 @@ class Blockchain:
         # attributes (lists)
         self.transactions = []
         self.chain = []  # will contain the list of blocks
+        self.node_id = str(uuid4()).replace('-', '')  # every time a node is created it has its own ID
 
         # methods
         # create the genesis block
@@ -45,10 +50,11 @@ class Blockchain:
                  'nonce': nonce,
                  'previous_hash': previous_hash}
 
-        # after adding the transactions to the block,
-        # we need to reset the current list of transactions
+        # after adding the transactions to the block, the current list of transactions is cleared
+        # (in real blockchain, the miner selects some transactions to add to the block, not all of them)
         self.transactions = []
         self.chain.append(block)
+        return block
 
     def verify_transaction_signature(self, sender_public_key, signature, transaction):
         public_key = RSA.importKey(binascii.unhexlify(sender_public_key))
@@ -60,6 +66,12 @@ class Blockchain:
             return True
         except ValueError:
             return False
+
+    def proof_of_work(self):
+        return 12345
+
+    def hash(self, block):
+        return 'abc'
 
     def submit_transaction(self, sender_public_key, recipient_public_key, signature, amount):
 
@@ -132,6 +144,31 @@ def get_transactions():
     response = {'transactions': transactions}
     return jsonify(response), 200
 
+
+# 4th endpoint -> Mine a block (= find the Nonce number)
+@app.route('/mine', methods=['GET'])
+def mine():
+    # run the proof of work algorithm
+    nonce = blockchain.proof_of_work()
+
+    # reward the miner = submit a new transaction to be incorporated into the next block
+    blockchain.submit_transaction(sender_public_key = MINING_SENDER,
+                                  recipient_public_key = blockchain.node_id,
+                                  signature = '',   # when rewarding the miner, there is no signature
+                                  amount = MINING_REWARD)
+
+    last_block = blockchain.chain[-1]  # get the last block of the chain
+    previous_hash = blockchain.hash(last_block)
+    block = blockchain.create_block(nonce = nonce, previous_hash = previous_hash)
+
+    response = {
+        'message': 'New block created',
+        'block_number': block['block_number'],
+        'transactions': block['transactions'],
+        'nonce': block['nonce'],
+        'previous_hash': block['previous_hash'],
+    }
+    return jsonify(response), 200
 
 # run the Flask web server
 if __name__ == '__main__':
