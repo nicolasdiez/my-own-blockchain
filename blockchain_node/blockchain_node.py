@@ -170,6 +170,17 @@ def mine():
     }
     return jsonify(response), 200
 
+
+# 5th endpoint -> Return the chain composed of blocks, each block can contain 1 or more transactions
+@app.route('/chain', methods=['GET'])
+def get_chain():
+    response = {
+        'chain': blockchain.chain,
+        'length': len(blockchain.chain)
+    }
+    return jsonify(response), 200
+
+
 # run the Flask web server
 if __name__ == '__main__':
     from argparse import ArgumentParser

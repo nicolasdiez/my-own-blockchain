@@ -45,7 +45,7 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="card-body">
-                    <h4 class="card-title">Transactions to be added to the next block</h4>
+                    <h4 class="card-title">Transactions to be added to the next block:</h4>
                     <button type="submit" id="refresh_transactions" class="btn btn-primary">
                         <i class="fa fa-refresh"></i>  <!-- icon refresh from font-awesome -->
                     </button>
@@ -67,6 +67,10 @@
         </div>
     </div>
 
+    <br>
+    <br>
+    <br>
+    <br>
 
 
     <!-- Transactions on the Blockchain -->
@@ -74,7 +78,7 @@
         <div class="row">
             <div class="col-lg-12 text-center">
                 <div class="card-body">
-                    <h4 class="card-title">Transactions on the Blockchain</h4>
+                    <h4 class="card-title">Transactions on the Blockchain:</h4>
                     <button type="submit" id="refresh_blockchain" class="btn btn-primary">
                         <i class="fa fa-refresh"></i>  <!-- icon refresh from font-awesome -->
                     </button>
@@ -104,6 +108,59 @@
         $(function() {
 
             $.ajax({
+                url: "/chain",
+                type: "GET",
+                success: function(response) {
+
+                    let transactions = []
+                    let count = 1
+
+                    /* iterate through the blocks of the chain */
+                    for (i=0 ; i < response['length'] ; i++) {
+
+                        /* iterate through the transactions of each block */
+                        for (j=0 ; j < response['chain'][i]['transactions'].length ; j++) {
+
+                            let options = {  year: "numeric", month: "short",  day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"  };
+                            let date = new Date(response["chain"][i]["timestamp"] *  1000);
+                            formattedTimestamp = date.toLocaleTimeString('en-US', options);
+
+
+                            let transaction = [
+                                count,
+                                response['chain'][i]['transactions'][j]['sender_public_key'],
+                                response['chain'][i]['transactions'][j]['recipient_public_key'],
+                                response['chain'][i]['transactions'][j]['amount'],
+                                formattedTimestamp,
+                                response['chain'][i]['block_number']
+                            ]
+
+                            transactions.push(transaction);
+                            count += 1;
+                        }
+                    }
+
+                    $('#transactions_table').dataTable({
+                        data: transactions,
+                        columns: [
+                            {title: "#"},
+                            {title: "Sender Public Key"},
+                            {title: "Recipient Public Key"},
+                            {title: "Amount"},
+                            {title: "Timestamp"},
+                            {title: "Block #"},
+                        ],
+                        columnDefs: [{targets: [1,2,3,4,5], render: $.fn.dataTable.render.ellipsis(25)}]
+                    });
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+
+
+
+            $.ajax({
                 url: "/transactions/get",
                 type: "GET",
                 success: function(response){
@@ -112,6 +169,7 @@
                     let count = 1
 
                     for (i=0 ; i<response['transactions'].length ; i++) {
+
                         let transaction = [
                             count,
                             response['transactions'][i]['sender_public_key'],
@@ -121,7 +179,7 @@
 
                         transactions.push(transaction);
 
-                        count += 1
+                        count += 1;
                     }
 
                     $('#unmined_transactions_table').dataTable({
@@ -154,11 +212,8 @@
                     }
 
                 });
-
             });
-
         });
-
     </script>
 
 </body>
