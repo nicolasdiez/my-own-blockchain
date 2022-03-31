@@ -14,11 +14,16 @@ from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
 from uuid import uuid4
+import json
+import hashlib
 
 # this is the sender_public_key when the sender is the blockchain itself, for miner rewarding
 MINING_SENDER = "The Blockchain"
 # reward for the miner node  is 1 coin
 MINING_REWARD = 1
+# the number of leading zeros in the hash value to be considered a value nonce
+MINING_DIFFICULTY = 2
+
 
 class Blockchain:
 
@@ -67,11 +72,36 @@ class Blockchain:
         except ValueError:
             return False
 
+    # static method cause self was not used at all (method doesnt belong to an instance, belongs to the class itself)
+    def valid_proof(self, transactions, last_hash, nonce, difficulty=MINING_DIFFICULTY):
+        guess = (str(transactions) + str(last_hash) + str(nonce)).encode('utf8')
+
+        # hash the guess with SHA256 algo
+        h = hashlib.new('sha256')
+        h.update(guess)
+        guess_hash = h.hexdigest()
+        # get the first #difficulty characters of the hash and compare them with #difficulty zeros, if equal return True
+        return guess_hash[:difficulty] == '0' * difficulty
+
     def proof_of_work(self):
-        return 12345
+        # get the last block
+        last_block = self.chain[-1]
+        # hash the last block
+        last_hash = self.hash(last_block)
+
+        # try nonce from 0, until we get a nonce that meet the DIFFICULTY criteria (eg: 2 leading zeros in the hash)
+        nonce = 0
+        while self.valid_proof(self.transactions, last_hash, nonce) is False:
+            nonce += 1
+
+        return nonce
 
     def hash(self, block):
-        return 'abc'
+        # the block dictionary has to be ordered, otherwise inconsistent hashes are obtained
+        block_string = json.dumps(block, sort_keys=True).encode('utf8')
+        h = hashlib.new('sha256')
+        h.update(block_string)
+        return h.hexdigest()
 
     def submit_transaction(self, sender_public_key, recipient_public_key, signature, amount):
 
