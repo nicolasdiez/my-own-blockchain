@@ -16,6 +16,7 @@ from Crypto.Hash import SHA256
 from uuid import uuid4
 import json
 import hashlib
+import requests
 
 # this is the sender_public_key when the sender is the blockchain itself, for miner rewarding
 MINING_SENDER = "The Blockchain"
@@ -33,6 +34,7 @@ class Blockchain:
         # attributes (lists)
         self.transactions = []
         self.chain = []  # will contain the list of blocks
+        self.nodes = set()  # every node maintains a list with the rest of the nodes available in the network
         self.node_id = str(uuid4()).replace('-', '')  # every time a node is created it has its own ID
 
         # methods
@@ -72,7 +74,8 @@ class Blockchain:
         except ValueError:
             return False
 
-    # static method cause self was not used at all (method doesnt belong to an instance, belongs to the class itself)
+    # static method cause self was not used at all (method doesn't belong to an instance, belongs to the class itself)
+    # Este método lo uso para comprobar que el nonce cumple con los leading zeros del MINING DIFFICULTY
     def valid_proof(self, transactions, last_hash, nonce, difficulty=MINING_DIFFICULTY):
         guess = (str(transactions) + str(last_hash) + str(nonce)).encode('utf8')
 
@@ -102,6 +105,72 @@ class Blockchain:
         h = hashlib.new('sha256')
         h.update(block_string)
         return h.hexdigest()
+
+    # method used to decide which chain is the valid one in case the node is receiving more than 1 different chain
+    # from the other nodes of the network
+    def resolve_conflicts(self):
+
+        # every node maintains a list with the rest of the nodes available in the network (that list is in self.nodes)
+        neighbours = self.nodes
+        new_chain = None
+
+        # length of the existing chain in the node
+        self_node_chain_length = len(self.chain)
+
+        for node in neighbours:
+
+            # get the latest version of the chain from the neighbour node
+            response = requests.get('http://' + node + '/chain')
+
+            if response.status_code == 200
+                neighbour_node_chain_length = response.json()['length']
+                neighbour_chain = response.json()['chain']
+
+                # if the neighbour node has a longer chain than the self node chain, and his chain is valid, then
+                # the self node has to replace his chain
+                if neighbour_node_chain_length > self_node_chain_length and valid_chain(neighbour_chain)
+                    self_node_chain_length = neighbour_node_chain_length
+                    new_chain = neighbour_chain
+
+        # new_chain holds the longest valid chain among all the neighbour nodes
+        # then update my self chain with the new_chain
+        if new_chain:
+            self.chain = new_chain
+            return True
+
+        return False
+
+
+    # verify if a chain is valid or not
+    def valid_chain(self, chain):
+        last_block = chain[0]
+        current_index = 1  # start in 1, because 0 is the genesis block
+
+        while current_index < len(chain):
+            block = chain[current_index]
+
+            # 1st check: Validate if previous hash value in the block is actually equal to hash of the previous block
+            if block['previous_hash'] != self.hash(last_block):
+                return False
+
+            # 2nd check: Validate if the nonce is actually a valid one
+            # get all the transactions of the block ordered, excepting the last one because is the reward for the miner
+            transactions = block['transactions'][:-1]
+            transaction_elements = ['sender_public_key', 'recipient_public_key', 'amount']
+            transactions = [OrderedDict((k, transaction[k]) for k in transaction_elements) for transaction in transactions]
+
+            if not self.valid_proof(transactions=transactions,
+                                    last_hash=block['previous_hash'],
+                                    nonce=block['nonce'],
+                                    difficulty=MINING_DIFFICULTY):
+                return False
+
+            last_block = block
+            current_index += 1
+
+        return True
+
+
 
     def submit_transaction(self, sender_public_key, recipient_public_key, signature, amount):
 
