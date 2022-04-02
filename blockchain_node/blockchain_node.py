@@ -17,6 +17,7 @@ from uuid import uuid4
 import json
 import hashlib
 import requests
+from urllib.parse import urlparse
 
 # this is the sender_public_key when the sender is the blockchain itself, for miner rewarding
 MINING_SENDER = "The Blockchain"
@@ -34,7 +35,7 @@ class Blockchain:
         # attributes (lists)
         self.transactions = []
         self.chain = []  # will contain the list of blocks
-        self.nodes = set()  # every node maintains a list with the rest of the nodes available in the network
+        self.nodes = set()  # list of nodes (every node keeps a list with the rest of the nodes available in th network)
         self.node_id = str(uuid4()).replace('-', '')  # every time a node is created it has its own ID
 
         # methods
@@ -106,41 +107,6 @@ class Blockchain:
         h.update(block_string)
         return h.hexdigest()
 
-    # method used to decide which chain is the valid one in case the node is receiving more than 1 different chain
-    # from the other nodes of the network
-    def resolve_conflicts(self):
-
-        # every node maintains a list with the rest of the nodes available in the network (that list is in self.nodes)
-        neighbours = self.nodes
-        new_chain = None
-
-        # length of the existing chain in the node
-        self_node_chain_length = len(self.chain)
-
-        for node in neighbours:
-
-            # get the latest version of the chain from the neighbour node
-            response = requests.get('http://' + node + '/chain')
-
-            if response.status_code == 200
-                neighbour_node_chain_length = response.json()['length']
-                neighbour_chain = response.json()['chain']
-
-                # if the neighbour node has a longer chain than the self node chain, and his chain is valid, then
-                # the self node has to replace his chain
-                if neighbour_node_chain_length > self_node_chain_length and valid_chain(neighbour_chain)
-                    self_node_chain_length = neighbour_node_chain_length
-                    new_chain = neighbour_chain
-
-        # new_chain holds the longest valid chain among all the neighbour nodes
-        # then update my self chain with the new_chain
-        if new_chain:
-            self.chain = new_chain
-            return True
-
-        return False
-
-
     # verify if a chain is valid or not
     def valid_chain(self, chain):
         last_block = chain[0]
@@ -170,7 +136,39 @@ class Blockchain:
 
         return True
 
+    # method used to decide which chain is the valid one in case the node is receiving more than 1 different chain
+    # from the other nodes of the network
+    def resolve_conflicts(self):
 
+        # every node maintains a list with the rest of the nodes available in the network (that list is in self.nodes)
+        neighbours = self.nodes
+        new_chain = None
+
+        # length of the existing chain in the node
+        self_node_chain_length = len(self.chain)
+
+        for node in neighbours:
+
+            # get the latest version of the chain from the neighbour node
+            response = requests.get('http://' + node + '/chain')
+
+            if response.status_code == 200:
+                neighbour_node_chain_length = response.json()['length']
+                neighbour_chain = response.json()['chain']
+
+                # if the neighbour node has a longer chain than the self node chain, and his chain is valid, then
+                # the self node has to replace his chain
+                if neighbour_node_chain_length > self_node_chain_length and self.valid_chain(neighbour_chain):
+                    self_node_chain_length = neighbour_node_chain_length
+                    new_chain = neighbour_chain
+
+        # new_chain holds the longest valid chain among all the neighbour nodes
+        # then update my self chain with the new_chain
+        if new_chain:
+            self.chain = new_chain
+            return True
+
+        return False
 
     def submit_transaction(self, sender_public_key, recipient_public_key, signature, amount):
 
@@ -193,6 +191,17 @@ class Blockchain:
             else:
                 return False
             return 3
+
+    def register_node(self, node_url):
+        # check if the URL is correct by using the urlparse lib
+        parsed_url = urlparse(node_url)
+        if parsed_url.netloc:
+            self.nodes.add(parsed_url.netloc)
+        elif parsed_url.path:
+            self.nodes.add(parsed_url.path)
+        else:
+            raise ValueError('Invalid URL')
+
 
 
 # instantiate the Blockchain
@@ -280,7 +289,38 @@ def get_chain():
     return jsonify(response), 200
 
 
-# run the Flask web server
+# 6th endpoint -> Return the list of nodes
+@app.route('/nodes/get', methods=['GET'])
+def get_nodes():
+    nodes = list(blockchain.nodes)
+    response = {'nodes': nodes}
+    return jsonify(response), 200
+
+
+# 7th endpoint -> Create a new node in the network
+@app.route('/nodes/register', methods=['POST'])
+def register_node():
+    #get the details to create the node from the form in the frontend
+    values = request.form
+    # split the list of nodes introduced by the user in the UI finding the separator coma (,), also remove spaces
+    # example: 127.0.0.1:5002, 127.0.0.1:5003, 127.0.0.1:5004
+    nodes = values.get('nodes').replace(' ', '').split(',')
+
+    if nodes is None:
+        return 'Error: Please introduce a valid list of nodes', 400
+
+    for node in nodes:
+        blockchain.register_node(node)
+
+    response = {
+        'message': 'Nodes have been added to the network',
+        'total_nodes': [node for node in blockchain.nodes]
+    }
+
+    return jsonify(response), 200
+
+
+ # run the Flask web server
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
