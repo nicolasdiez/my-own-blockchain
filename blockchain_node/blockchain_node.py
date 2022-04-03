@@ -18,6 +18,7 @@ import json
 import hashlib
 import requests
 from urllib.parse import urlparse
+import logging
 
 # this is the sender_public_key when the sender is the blockchain itself, for miner rewarding
 MINING_SENDER = "The Blockchain"
@@ -193,22 +194,23 @@ class Blockchain:
             return 3
 
     def register_node(self, node_url):
+        self.nodes.add(node_url)
+        """
         # check if the URL is correct by using the urlparse lib
         parsed_url = urlparse(node_url)
-        if parsed_url.netloc:
-            self.nodes.add(parsed_url.netloc)
+        if parsed_url.scheme:
+            self.nodes.add(parsed_url.scheme)
         elif parsed_url.path:
             self.nodes.add(parsed_url.path)
         else:
             raise ValueError('Invalid URL')
-
-
+        """
 
 # instantiate the Blockchain
 blockchain = Blockchain()
 
 # Create Flask web server
-# instantiate the Node web server
+# instantiate the Node (web server)
 app = Flask(__name__)
 CORS(app)   # to overcome CORS blocking requests by Chrome
 
@@ -217,6 +219,11 @@ CORS(app)   # to overcome CORS blocking requests by Chrome
 @app.route("/")
 def index():
     return render_template('./index.html')
+
+
+@app.route("/configure")
+def configure():
+    return render_template('./configure.html')
 
 
 # 2nd endpoint -> Create a new transaction (add a transaction to the next Block in the blockchain)
@@ -300,11 +307,17 @@ def get_nodes():
 # 7th endpoint -> Create a new node in the network
 @app.route('/nodes/register', methods=['POST'])
 def register_node():
-    #get the details to create the node from the form in the frontend
+
+    # get the details to create the node from the form in the frontend
     values = request.form
-    # split the list of nodes introduced by the user in the UI finding the separator coma (,), also remove spaces
+
+    # split the list of nodes introduced by the user in the UI by finding the separator comma (,) and also remove spaces
     # example: 127.0.0.1:5002, 127.0.0.1:5003, 127.0.0.1:5004
+    # get the value with id="nodes" from the form
     nodes = values.get('nodes').replace(' ', '').split(',')
+
+    logging.debug(nodes)
+    print(nodes)
 
     if nodes is None:
         return 'Error: Please introduce a valid list of nodes', 400
@@ -320,7 +333,7 @@ def register_node():
     return jsonify(response), 200
 
 
- # run the Flask web server
+# run the Flask web server
 if __name__ == '__main__':
     from argparse import ArgumentParser
 
