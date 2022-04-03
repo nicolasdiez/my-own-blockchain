@@ -3,7 +3,7 @@
 # -----------------------------------------------------------------------------------------------
 
 
-    def proof_of_stake(self):
+def proof_of_stake(self):
         # get the last block
         last_block = self.chain[-1]
         # hash the last block
@@ -147,3 +147,119 @@ def verify_transaction_signature_2(self, sender_public_key, signature, transacti
             return True
         except ValueError:
             return False
+
+
+def proof_of_stake_2(self):
+    # get the last block
+    last_block = self.chain[-1]
+    # hash the last block
+    last_hash = self.hash(last_block)
+    # try nonce from 0, until we get a nonce that meet the DIFFICULTY criteria (eg: 2 leading zeros in the hash)
+    nonce = 0
+    while self.valid_proof(self.transactions, last_hash, nonce) is False:
+        nonce += 1
+    return nonce
+
+
+def submit_transaction_3(self, sender_public_key, recipient_public_key, signature, amount):
+
+        transaction = OrderedDict({
+            'sender_public_key': sender_public_key,
+            'recipient_public_key': recipient_public_key,
+            'amount': amount
+        })
+
+        # Reward the miner for mining the block (transaction comes from the BC, not from a wallet)
+        if sender_public_key == MINING_SENDER:
+            self.transactions.append(transaction)
+            return len(self.chain) + 1
+        else:
+            # transaction from wallet to another wallet
+            signature_verification = self.verify_transaction_signature(sender_public_key, signature, transaction)
+            if signature_verification:
+                self.transactions.append(transaction)
+                return len(self.chain) + 1
+            else:
+                return False
+            return 3
+
+
+def valid_chain_3(self, chain):
+    last_block = chain[0]
+    current_index = 1  # start in 1, because 0 is the genesis block
+
+    while current_index < len(chain):
+        block = chain[current_index]
+
+        # 1st check: Validate if previous hash value in the block is actually equal to hash of the previous block
+        if block['previous_hash'] != self.hash(last_block):
+            return False
+
+        # 2nd check: Validate if the nonce is actually a valid one
+        # get all the transactions of the block ordered, excepting the last one because is the reward for the miner
+        transactions = block['transactions'][:-1]
+        transaction_elements = ['sender_public_key', 'recipient_public_key', 'amount']
+        transactions = [OrderedDict((k, transaction[k]) for k in transaction_elements) for transaction in transactions]
+
+        if not self.valid_proof(transactions=transactions,
+                                last_hash=block['previous_hash'],
+                                nonce=block['nonce'],
+                                difficulty=MINING_DIFFICULTY):
+            return False
+
+        last_block = block
+        current_index += 1
+
+    return True
+
+
+def submit_transaction_4 (self, sender_public_key, recipient_public_key, signature, amount):
+
+        transaction = OrderedDict({
+            'sender_public_key': sender_public_key,
+            'recipient_public_key': recipient_public_key,
+            'amount': amount
+        })
+
+        # Reward the miner for mining the block (transaction comes from the BC, not from a wallet)
+        if sender_public_key == MINING_SENDER:
+            self.transactions.append(transaction)
+            return len(self.chain) + 1
+        else:
+            # transaction from wallet to another wallet
+            signature_verification = self.verify_transaction_signature(sender_public_key, signature, transaction)
+            if signature_verification:
+                self.transactions.append(transaction)
+                return len(self.chain) + 1
+            else:
+                return False
+            return 3
+
+
+def valid_chain_4(self, chain):
+    last_block = chain[0]
+    current_index = 1  # start in 1, because 0 is the genesis block
+
+    while current_index < len(chain):
+        block = chain[current_index]
+
+        # 1st check: Validate if previous hash value in the block is actually equal to hash of the previous block
+        if block['previous_hash'] != self.hash(last_block):
+            return False
+
+        # 2nd check: Validate if the nonce is actually a valid one
+        # get all the transactions of the block ordered, excepting the last one because is the reward for the miner
+        transactions = block['transactions'][:-1]
+        transaction_elements = ['sender_public_key', 'recipient_public_key', 'amount']
+        transactions = [OrderedDict((k, transaction[k]) for k in transaction_elements) for transaction in transactions]
+
+        if not self.valid_proof(transactions=transactions,
+                                last_hash=block['previous_hash'],
+                                nonce=block['nonce'],
+                                difficulty=MINING_DIFFICULTY):
+            return False
+
+        last_block = block
+        current_index += 1
+
+    return True
