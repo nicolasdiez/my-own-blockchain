@@ -204,7 +204,7 @@
                     url: '/mine',
                     type: 'GET',
                     success: function(response) {
-                        //window.location.reload();
+                        window.location.reload();
                     },
                     error: function(error){
                         console.log(error);
@@ -212,6 +212,24 @@
 
                 });
             });
+
+            $('#refresh_transactions').click(function() {
+                window.location.reload();
+            });
+
+            $('#refresh_blockchain').click(function() {
+                 $.ajax({
+                    url: '/nodes/resolve',
+                    type: 'GET',
+                    success: function(response) {
+                        window.location.reload();
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                 });
+            });
+
         });
     </script>
 

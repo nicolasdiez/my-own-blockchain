@@ -206,6 +206,7 @@ class Blockchain:
             raise ValueError('Invalid URL')
         """
 
+
 # instantiate the Blockchain
 blockchain = Blockchain()
 
@@ -215,15 +216,10 @@ app = Flask(__name__)
 CORS(app)   # to overcome CORS blocking requests by Chrome
 
 
-# 1st endpoint
+# 1st endpoint -> render the index.html page
 @app.route("/")
 def index():
     return render_template('./index.html')
-
-
-@app.route("/configure")
-def configure():
-    return render_template('./configure.html')
 
 
 # 2nd endpoint -> Create a new transaction (add a transaction to the next Block in the blockchain)
@@ -286,7 +282,7 @@ def mine():
     return jsonify(response), 200
 
 
-# 5th endpoint -> Return the chain composed of blocks, each block can contain 1 or more transactions
+# 5th endpoint -> Return the chain (which is composed of blocks), each block can contain 1 or more transactions
 @app.route('/chain', methods=['GET'])
 def get_chain():
     response = {
@@ -333,6 +329,30 @@ def register_node():
     return jsonify(response), 200
 
 
+# 8th endpoint -> render the configure.html page
+@app.route("/configure")
+def configure():
+    return render_template('./configure.html')
+
+
+# 9th endpoint -> Resolve the conflicts between nodes which local chain copies are different in length
+@app.route('/nodes/resolve', methods=['GET'])
+def consensus():
+    replaced = blockchain.resolve_conflicts()
+
+    if replaced:
+        response = {
+            'message': 'Our chain was replaced',
+            'new_chain': blockchain.chain
+        }
+    else:
+        response = {
+            'message': 'Our chain is authoritative',
+            'chain': blockchain.chain
+        }
+    return jsonify(response), 200
+
+
 # run the Flask web server
 if __name__ == '__main__':
     from argparse import ArgumentParser
@@ -343,80 +363,3 @@ if __name__ == '__main__':
     port = args.port
 
     app.run(host='127.0.0.1', port=port, debug=True)
-
-
-
-
-
-
-# -----------------------------------------------------------------------------------------------
-# --------------------------------- TESTING SOME FUNCTIONALITIES --------------------------------
-
-
-    def proof_of_stake(self):
-        # get the last block
-        last_block = self.chain[-1]
-        # hash the last block
-        last_hash = self.hash(last_block)
-        # try nonce from 0, until we get a nonce that meet the DIFFICULTY criteria (eg: 2 leading zeros in the hash)
-        nonce = 0
-        while self.valid_proof(self.transactions, last_hash, nonce) is False:
-            nonce += 1
-        return nonce
-
-
-def mine_2():
-    # run the proof of work algorithm
-    nonce = blockchain.proof_of_work()
-
-    # reward the miner = submit a new transaction to be incorporated into the next block
-    blockchain.submit_transaction(sender_public_key = MINING_SENDER,
-                                  recipient_public_key = blockchain.node_id,
-                                  signature = '',   # when rewarding the miner, there is no signature
-                                  amount = MINING_REWARD)
-
-    last_block = blockchain.chain[-1]  # get the last block of the chain
-    previous_hash = blockchain.hash(last_block)
-    block = blockchain.create_block(nonce = nonce, previous_hash = previous_hash)
-
-    response = {
-        'message': 'New block created',
-        'block_number': block['block_number'],
-        'transactions': block['transactions'],
-        'nonce': block['nonce'],
-        'previous_hash': block['previous_hash'],
-    }
-    return jsonify(response), 200
-
-
-def resolve_conflicts_2(self):
-
-    # every node maintains a list with the rest of the nodes available in the network (that list is in self.nodes)
-    neighbours = self.nodes
-    new_chain = None
-
-    # length of the existing chain in the node
-    self_node_chain_length = len(self.chain)
-
-    for node in neighbours:
-
-        # get the latest version of the chain from the neighbour node
-        response = requests.get('http://' + node + '/chain')
-
-        if response.status_code == 200:
-            neighbour_node_chain_length = response.json()['length']
-            neighbour_chain = response.json()['chain']
-
-            # if the neighbour node has a longer chain than the self node chain, and his chain is valid, then
-            # the self node has to replace his chain
-            if neighbour_node_chain_length > self_node_chain_length and self.valid_chain(neighbour_chain):
-                self_node_chain_length = neighbour_node_chain_length
-                new_chain = neighbour_chain
-
-    # new_chain holds the longest valid chain among all the neighbour nodes
-    # then update my self chain with the new_chain
-    if new_chain:
-        self.chain = new_chain
-        return True
-
-    return False
