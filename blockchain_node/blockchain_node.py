@@ -101,6 +101,8 @@ class Blockchain:
 
         return nonce
 
+    # SHA256 hash algorithm is used to hash the block
+    # The hash of a block, is the SHA256-hash function of: Block number + Data + Previous Hash + Nonce
     def hash(self, block):
         # the block dictionary has to be ordered, otherwise inconsistent hashes are obtained
         block_string = json.dumps(block, sort_keys=True).encode('utf8')

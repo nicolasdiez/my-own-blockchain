@@ -96,6 +96,7 @@ def generate_transaction():
     recipient_public_key = request.form['recipient_public_key']
     amount = request.form['amount']
 
+    # create a Transaction object
     transaction = Transaction(sender_public_key, sender_private_key, recipient_public_key, amount)
 
     response = {'transaction': transaction.to_dictionary(),
