@@ -23,7 +23,7 @@ Considerations:
 
 - Open PyCharm terminal (or any other cli)
 - Go to the blockchain_node directory ($ cd D:\PycharmProjects\blockchain_nico\blockchain_node)
-- Run file "blockchain_node.py" with the following arguments: $ blockchain_node.py -p PORT_NUMBER (eg: python blockchain_node.py -p 5003)
+- Run file "blockchain_node.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_node.py -p 5003)
 - Now a blockchain network Node is running on: http://127.0.0.1:5003/ 
 
 - You can run as many Nodes as you want by changing the PORTNUMBER (eg: python blockchain_node.py -p 5004, python blockchain_node.py -p 5005, ...)
@@ -36,7 +36,7 @@ Considerations:
 
 - Open PyCharm terminal (or any other cli)
 - Go to the blockchain_client directory ($ cd D:\PycharmProjects\blockchain_nico\blockchain_client)
-- Run file "blockchain_client.py" with the following arguments: $ blockchain_client.py -p PORT_NUMBER (eg: python blockchain_client.py -p 8081)
+- Run file "blockchain_client.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_client.py -p 8081)
 - Now a blockchain Client is running on: http://127.0.0.1:8081/ 
 
 - You can run as many Clients as you want by changing the PORTNUMBER (eg: python blockchain_client.py -p 8082, python blockchain_client.py -p 8083, ...)
