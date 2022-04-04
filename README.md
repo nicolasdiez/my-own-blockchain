@@ -1,7 +1,8 @@
 # My Own Blockchain
 
-Author: nicolas.diez.risueno@gmail.com
-Project: My Own Blockchain
+- Author: nicolas.diez.risueno@gmail.com
+- Project: My Own Blockchain
+
 
 Summary:
 - This project is a miniaturized blockchain model created by Nicolas Díez
@@ -44,7 +45,7 @@ Considerations:
 
 -------------
 
-# Node UI functionalities
+# Description of the Node UI functionalities
 
 - Home -> Transactions to be added to the next block: Here you can see the transactions that the Clients (= users) have sent to the Node. Transactions consist of a transfer of coins ("amount") between the "Sender Public Key" and the "Recipient Public Key". Transactions have to be signed with the "Sender Private Key" 
 
@@ -58,7 +59,7 @@ Considerations:
 
 -------------
 
-# Client UI functionalities
+# Description of the Client UI functionalities
 
 - Wallet Generator: Here you can generate a pair of public and private keys to be used as a wallet. The public key is used as wallet address to send/receive coins to/from other wallets. The private key is used to sign every transaction. Remember that, a transaction is a transfer of a certain amount of coins, which is sent from the sender´s public key to the recipient´s public key, and is signed with the sender´s private key.
 
