@@ -48,19 +48,19 @@ class Transaction:
 app = Flask(__name__)
 
 
-# first endpoint -> index
+# first endpoint -> show index html page
 @app.route('/')
 def index():
     return render_template('./index.html')
 
 
-# 2nd endpoint -> make a transaction
+# 2nd endpoint -> show "Make Transaction" html page
 @app.route('/make/transaction')
 def make_transaction():
     return render_template('./make_transaction.html')
 
 
-# 3rd endpoint -> view transactions
+# 3rd endpoint -> show "View Transactions" html page
 @app.route('/view/transactions')
 def view_transactions():
     return render_template('./view_transactions.html')
