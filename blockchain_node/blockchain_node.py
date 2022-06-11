@@ -250,7 +250,7 @@ def new_transaction():
     return jsonify(response), 201   # returning 201 signaling that we are creating a new resource
 
 
-# 3rd endpoint -> Get the transactions in the Node
+# 3rd endpoint -> Get all the transactions that are present in a Node
 @app.route('/transactions/get', methods=['GET'])
 def get_transactions():
     transactions = blockchain.transactions
