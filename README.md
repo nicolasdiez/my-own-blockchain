@@ -1,5 +1,7 @@
+# my_own_blockchain
 This project is a miniaturized blockchain model.
 The architecture consist of two types of elements: Nodes and Clients
+
 
 # My Own Blockchain
 
