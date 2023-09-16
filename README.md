@@ -1,3 +1,11 @@
+<<<<<<< HEAD
+=======
+# My Own Blockchain
+
+- Author: nicolas.diez.risueno@gmail.com
+- Project: My Own Blockchain
+
+>>>>>>> 384a50b39fdade4e4ae73e0e93042ef9f5883197
 Summary:
 - This project is a miniaturized blockchain model
 - The architecture consist of two types of elements: Nodes and Clients
@@ -60,3 +68,9 @@ Considerations:
 - Make Transaction: Here you can send an amount of coins from the a sender´s public key to a recipient´s public key. The transaction must be signed with the sender´s private key. When generating a transaction, you have to choose to which node you want to send the transaction to, in order for the node to mine the next block which includes your new submitted transaction.
 
 - View Transactions: By submitting the IP of a node, here you can see all the transactions contained on the local copy of the node.
+
+
+
+
+
+
