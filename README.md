@@ -16,7 +16,7 @@ Considerations:
 # How to run the Node web server
 
 - Open PyCharm terminal (or any other cli)
-- Go to the blockchain_node directory ($ cd D:\PycharmProjects\blockchain_nico\blockchain_node)
+- Go to the blockchain_node directory ($ cd ...\blockchain_node)
 - Run file "blockchain_node.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_node.py -p 5003)
 - Now a blockchain network Node is running on: http://127.0.0.1:5003/ 
 
@@ -29,7 +29,7 @@ Considerations:
 # How to run the Client web server 
 
 - Open PyCharm terminal (or any other cli)
-- Go to the blockchain_client directory ($ cd D:\PycharmProjects\blockchain_nico\blockchain_client)
+- Go to the blockchain_client directory ($ cd ...\blockchain_client)
 - Run file "blockchain_client.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_client.py -p 8081)
 - Now a blockchain Client is running on: http://127.0.0.1:8081/ 
 
