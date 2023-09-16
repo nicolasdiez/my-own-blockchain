@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-=======
-# My Own Blockchain
-
-- Author: nicolas.diez.risueno@gmail.com
-- Project: My Own Blockchain
-
->>>>>>> 384a50b39fdade4e4ae73e0e93042ef9f5883197
 Summary:
 - This project is a miniaturized blockchain model
 - The architecture consist of two types of elements: Nodes and Clients
