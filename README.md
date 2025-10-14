@@ -46,27 +46,27 @@
   - Here you can see the transactions that the Clients (= users) have sent to the Node. Transactions consist of a transfer of coins ("amount") between the "Sender Public Key" and the "Recipient Public Key". Transactions have to be signed with the "Sender Private Key" 
 
 - Home -> Mine: 
- - This button mines the next block with all the transactions shown on the table labelled as "Transactions to be added to the next block". As a reminder, mining a block means to find a "nonce" number which produces a SHA-256 hash number with leading zeros equal to MINING_DIFFICULTY.
+  - This button mines the next block with all the transactions shown on the table labelled as "Transactions to be added to the next block". As a reminder, mining a block means to find a "nonce" number which produces a SHA-256 hash number with leading zeros equal to MINING_DIFFICULTY.
 
 - Home -> Transactions on the Blockchain: 
- - Here you can see all the blocks that contain the local copy of the Node chain, along with all the transactions they contain.
+  - Here you can see all the blocks that contain the local copy of the Node chain, along with all the transactions they contain.
 
 - Configure Nodes -> Add Blockchain nodes: 
- - Here you can add the IP of the other Nodes of the network, so the current instance of the Node is aware of them. When a Node is aware of other nodes in the network, a consensus mechanism among them have to be applied everytime a new block is added to the blockchain.
+  - Here you can add the IP of the other Nodes of the network, so the current instance of the Node is aware of them. When a Node is aware of other nodes in the network, a consensus mechanism among them have to be applied everytime a new block is added to the blockchain.
 
 - Configure Nodes -> This node can retrieve Blockchain data from the following nodes: 
- - Here you can see the IP list of all the nodes that the current instance of the Node is aware of.
+  - Here you can see the IP list of all the nodes that the current instance of the Node is aware of.
 
 # Description of the Client UI functionalities
 
 - Wallet Generator: 
- - Here you can generate a pair of public and private keys to be used as a wallet. The public key is used as wallet address to send/receive coins to/from other wallets. The private key is used to sign every transaction. Remember that, a transaction is a transfer of a certain amount of coins, which is sent from the sender´s public key to the recipient´s public key, and is signed with the sender´s private key.
+  - Here you can generate a pair of public and private keys to be used as a wallet. The public key is used as wallet address to send/receive coins to/from other wallets. The private key is used to sign every transaction. Remember that, a transaction is a transfer of a certain amount of coins, which is sent from the sender´s public key to the recipient´s public key, and is signed with the sender´s private key.
 
 - Make Transaction: 
- - Here you can send an amount of coins from the a sender´s public key to a recipient´s public key. The transaction must be signed with the sender´s private key. When generating a transaction, you have to choose to which node you want to send the transaction to, in order for the node to mine the next block which includes your new submitted transaction.
+  - Here you can send an amount of coins from the a sender´s public key to a recipient´s public key. The transaction must be signed with the sender´s private key. When generating a transaction, you have to choose to which node you want to send the transaction to, in order for the node to mine the next block which includes your new submitted transaction.
 
 - View Transactions: 
- - By submitting the IP of a node, here you can see all the transactions contained on the local copy of the node.
+  - By submitting the IP of a node, here you can see all the transactions contained on the local copy of the node.
 
 
 
