@@ -43,7 +43,7 @@
 # Description of the Node UI functionalities
 
 - Home -> Transactions to be added to the next block: 
- - Here you can see the transactions that the Clients (= users) have sent to the Node. Transactions consist of a transfer of coins ("amount") between the "Sender Public Key" and the "Recipient Public Key". Transactions have to be signed with the "Sender Private Key" 
+  - Here you can see the transactions that the Clients (= users) have sent to the Node. Transactions consist of a transfer of coins ("amount") between the "Sender Public Key" and the "Recipient Public Key". Transactions have to be signed with the "Sender Private Key" 
 
 - Home -> Mine: 
  - This button mines the next block with all the transactions shown on the table labelled as "Transactions to be added to the next block". As a reminder, mining a block means to find a "nonce" number which produces a SHA-256 hash number with leading zeros equal to MINING_DIFFICULTY.
