@@ -1,11 +1,7 @@
---
-
 # Summary
 
 - This project is a miniaturized blockchain model
 - The architecture consist of two types of elements: Nodes and Clients
-
---
 
 # Considerations:
 
@@ -17,16 +13,12 @@
 - SHA256 is used as secure hashing algorithm
 - You can check the file "blockchain network example with 3 nodes and 2 clients.JPG" to get an idea of a possible blockchain network architecture that you can implement with this Project
 
---
-
 # How to RUN the APPLICATION (STEPS)  👈👈👈 START HERE
 
 1 - activate virtual environment (source .venv/Scripts/activate)
 2 - install project dependencies (pip install -r requirements.txt)
 3 - run Nodes (as many as you want) (described below 👇)
 4 - run Clients (as many as you want) (described below 👇)
-
---
 
 # How to run Nodes
 
@@ -38,8 +30,6 @@
 
 - You can check the file "blockchain node UI.JPG" to get an idea of the node UI
 
---
-
 # How to run the Clients 
 
 - Open CLI terminal in project root (ej. /my-own-blockchain)
@@ -49,8 +39,6 @@
 - You can run as many Clients as you want by changing the PORTNUMBER (eg: python blockchain_client/blockchain_client.py -p 8082, python blockchain_client/blockchain_client.py -p 8083, ...)
 
 - You can check the file "blockchain client UI.JPG" to get an idea of the client UI
-
---
 
 # Description of the Node UI functionalities
 
@@ -69,8 +57,6 @@ Here you can add the IP of the other Nodes of the network, so the current instan
 - Configure Nodes -> This node can retrieve Blockchain data from the following nodes: 
 Here you can see the IP list of all the nodes that the current instance of the Node is aware of.
 
---
-
 # Description of the Client UI functionalities
 
 - Wallet Generator: 
@@ -81,8 +67,6 @@ Here you can send an amount of coins from the a sender´s public key to a recipi
 
 - View Transactions: 
 By submitting the IP of a node, here you can see all the transactions contained on the local copy of the node.
-
---
 
 
 
