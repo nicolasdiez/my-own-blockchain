@@ -15,10 +15,10 @@
 
 # How to RUN the APPLICATION (STEPS)  👈👈👈 START HERE
 
-1 - activate virtual environment (source .venv/Scripts/activate)
-2 - install project dependencies (pip install -r requirements.txt)
-3 - run Nodes (as many as you want) (described below 👇)
-4 - run Clients (as many as you want) (described below 👇)
+- activate virtual environment (source .venv/Scripts/activate)
+- install project dependencies (pip install -r requirements.txt)
+- run Nodes (as many as you want) (described below 👇)
+- run Clients (as many as you want) (described below 👇)
 
 # How to run Nodes
 
