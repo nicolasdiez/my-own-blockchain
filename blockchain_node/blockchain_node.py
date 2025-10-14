@@ -1,4 +1,4 @@
-# Author: nicolas.diez.risueno@gmail.com
+# Author: Nico Díez Risueño
 # Project: My Own Blockchain
 # File description:
 # Each Node in the blockchain will have a set of transactions sent by the users/clients (Alice or Bob).

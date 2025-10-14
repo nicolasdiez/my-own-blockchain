@@ -1,4 +1,4 @@
-# Author: nicolas.diez.risueno@gmail.com
+# Author: Nico Díez Risueño
 # Project: My Own Blockchain
 
 from flask import Flask, request, jsonify, render_template

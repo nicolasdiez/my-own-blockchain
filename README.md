@@ -15,12 +15,11 @@ Considerations:
 
 # How to run the Node web server
 
-- Open PyCharm terminal (or any other cli)
-- Go to the blockchain_node directory ($ cd ...\blockchain_node)
-- Run file "blockchain_node.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_node.py -p 5003)
+- Open CLI terminal in project root (ej. /my-own-blockchain)
+- Run file "blockchain_node.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_node/blockchain_node.py -p 5003)
 - Now a blockchain network Node is running on: http://127.0.0.1:5003/ 
 
-- You can run as many Nodes as you want by changing the PORTNUMBER (eg: python blockchain_node.py -p 5004, python blockchain_node.py -p 5005, ...)
+- You can run as many Nodes as you want by changing the PORTNUMBER (eg: python blockchain_node/blockchain_node.py -p 5004, python blockchain_node/blockchain_node.py -p 5005, ...)
 
 - You can check the file "blockchain node UI.JPG" to get an idea of the node UI
 
@@ -28,12 +27,11 @@ Considerations:
 
 # How to run the Client web server 
 
-- Open PyCharm terminal (or any other cli)
-- Go to the blockchain_client directory ($ cd ...\blockchain_client)
-- Run file "blockchain_client.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_client.py -p 8081)
+- Open CLI terminal in project root (ej. /my-own-blockchain)
+- Run file "blockchain_client.py" with the following arguments: -p PORT_NUMBER (eg: python blockchain_client/blockchain_client.py -p 8081)
 - Now a blockchain Client is running on: http://127.0.0.1:8081/ 
 
-- You can run as many Clients as you want by changing the PORTNUMBER (eg: python blockchain_client.py -p 8082, python blockchain_client.py -p 8083, ...)
+- You can run as many Clients as you want by changing the PORTNUMBER (eg: python blockchain_client/blockchain_client.py -p 8082, python blockchain_client/blockchain_client.py -p 8083, ...)
 
 - You can check the file "blockchain client UI.JPG" to get an idea of the client UI
 
