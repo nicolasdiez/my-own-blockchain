@@ -27,6 +27,7 @@
 - Now a blockchain network Node is running on: http://127.0.0.1:5003/ 
 
 - You can run as many Nodes as you want by changing the PORTNUMBER (eg: python blockchain_node/blockchain_node.py -p 5004, python blockchain_node/blockchain_node.py -p 5005, ...)
+- In order to make each node aware of each other and to be able to share the same blockchain instance, you must add on each node the IP addresses of the rest of the nodes in the network by using the option "Configure Nodes -> Add Blockchain nodes"
 
 - You can check the file "blockchain node UI.JPG" to get an idea of the node UI
 
